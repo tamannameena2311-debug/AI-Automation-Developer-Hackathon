@@ -19,7 +19,7 @@ from google.genai import types
 
 # ========= CONFIG =========
 # 🔑 Add your API key here
-API_KEY = "AIzaSyCDfIvh-QZMixnP7qBmCnFZq9jQ5qE5vcg"
+API_KEY = "YOUR_API_KEY"
 
 # ========= HELPER FUNCTIONS =========
 def clean_html(html_content: str) -> str:
