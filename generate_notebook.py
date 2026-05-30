@@ -1,9 +1,11 @@
-# ================================
+import json
+
+cell1_source = """# ================================
 # INSTALL DEPENDENCIES (Run this cell first in a new block)
 # ================================
-# !pip install beautifulsoup4 requests google-genai
+!pip install beautifulsoup4 requests google-genai"""
 
-# ================================
+cell2_source = """# ================================
 # 🏆 Hackathon Template Notebook
 # Prospect Research Agent
 # ================================
@@ -23,15 +25,15 @@ API_KEY = "AIzaSyCDfIvh-QZMixnP7qBmCnFZq9jQ5qE5vcg"
 
 # ========= HELPER FUNCTIONS =========
 def clean_html(html_content: str) -> str:
-    """Removes boilerplate from HTML and returns clean text."""
+    \"\"\"Removes boilerplate from HTML and returns clean text.\"\"\"
     soup = BeautifulSoup(html_content, "html.parser")
     for element in soup(["script", "style", "header", "footer", "nav", "noscript"]):
         element.extract()
     text = soup.get_text(separator=" ", strip=True)
-    return re.sub(r'\s+', ' ', text)
+    return re.sub(r'\\s+', ' ', text)
 
 def smart_scrape(base_url: str) -> str:
-    """Scrapes the base url and heuristically finds Contact/About pages to scrape as well."""
+    \"\"\"Scrapes the base url and heuristically finds Contact/About pages to scrape as well.\"\"\"
     headers = {
         "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
     }
@@ -47,7 +49,7 @@ def smart_scrape(base_url: str) -> str:
         return ""
 
     soup = BeautifulSoup(response.text, "html.parser")
-    scraped_text = "=== HOME PAGE ===\n" + clean_html(response.text) + "\n"
+    scraped_text = "=== HOME PAGE ===\\n" + clean_html(response.text) + "\\n"
     
     links_to_visit = set()
     keywords = ["about", "contact", "service"]
@@ -68,7 +70,7 @@ def smart_scrape(base_url: str) -> str:
             res = requests.get(link, headers=headers, timeout=10)
             if res.status_code == 200:
                 page_name = link.split("/")[-1] or "PAGE"
-                scraped_text += f"\n=== {page_name.upper()} ===\n" + clean_html(res.text) + "\n"
+                scraped_text += f"\\n=== {page_name.upper()} ===\\n" + clean_html(res.text) + "\\n"
         except Exception:
             continue
             
@@ -80,10 +82,10 @@ def smart_scrape(base_url: str) -> str:
 
 # ========= REQUIRED FUNCTION =========
 def enrich_company(url: str) -> dict:
-    """
+    \"\"\"
     Input: Company URL
     Output: Structured company profile (STRICT FORMAT)
-    """
+    \"\"\"
     if API_KEY == "YOUR_API_KEY":
         raise ValueError("Please set your Gemini API_KEY in the CONFIG block above.")
         
@@ -97,7 +99,7 @@ def enrich_company(url: str) -> dict:
 
     client = genai.Client(api_key=API_KEY)
     
-    prompt = """
+    prompt = \"\"\"
     Extract the following information from the provided company text and return it strictly as a JSON object adhering to this exact schema:
     {
       "website_name": "String (Name of the website/company)",
@@ -117,7 +119,7 @@ def enrich_company(url: str) -> dict:
     3. Return ONLY valid JSON, without any markdown formatting or backticks.
     
     Company Text:
-    """ + scraped_text
+    \"\"\" + scraped_text
 
     response = client.models.generate_content(
         model='gemini-2.5-flash',
@@ -142,12 +144,9 @@ def enrich_company(url: str) -> dict:
             "mobile_number": "", "mail": [], "core_service": "", 
             "target_customer": "", "probable_pain_point": "", "outreach_opener": ""
         }
+"""
 
-# ============================================================================
-# SECOND BOX - EXECUTED AT THE BOTTOM
-# ============================================================================
-
-# ========= 9. MAIN EXECUTION =========
+cell3_source = """# ========= 9. MAIN EXECUTION =========
 if __name__ == "__main__":
     # 👉 Getting input dynamically
     import ast
@@ -175,5 +174,61 @@ if __name__ == "__main__":
     print("Results saved to results.json")
 
     # Print results for evaluation
-    print("\n=== FINAL OUTPUT ===\n")
+    print("\\n=== FINAL OUTPUT ===\\n")
     print(json.dumps(results, indent=2))
+"""
+
+notebook = {
+    "cells": [
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [line + "\\n" for line in cell1_source.split("\\n")]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [line + "\\n" for line in cell2_source.split("\\n")]
+        },
+        {
+            "cell_type": "code",
+            "execution_count": None,
+            "metadata": {},
+            "outputs": [],
+            "source": [line + "\\n" for line in cell3_source.split("\\n")]
+        }
+    ],
+    "metadata": {
+        "kernelspec": {
+            "display_name": "Python 3",
+            "language": "python",
+            "name": "python3"
+        },
+        "language_info": {
+            "codemirror_mode": {
+                "name": "ipython",
+                "version": 3
+            },
+            "file_extension": ".py",
+            "mimetype": "text/x-python",
+            "name": "python",
+            "nbconvert_exporter": "python",
+            "pygments_lexer": "ipython3",
+            "version": "3.8.0"
+        }
+    },
+    "nbformat": 4,
+    "nbformat_minor": 4
+}
+
+# Clean up extra newlines at the end of cell source arrays
+for cell in notebook['cells']:
+    if cell['source']:
+        cell['source'][-1] = cell['source'][-1].rstrip('\\n')
+
+with open('AI_Hackathon_Submission.ipynb', 'w') as f:
+    json.dump(notebook, f, indent=2)
