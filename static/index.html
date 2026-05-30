@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Prospect Researcher</title>
+    <meta name="description" content="AI & Automation Hackathon - Prospect Research Dashboard">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="background-elements">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <main class="container">
+        <header>
+            <h1>AI Prospect <span>Researcher</span></h1>
+            <p class="subtitle">Intelligent web scraping and AI-driven business insights generation.</p>
+        </header>
+
+        <section class="glass-panel enrich-section">
+            <h2>Enrich Company Data</h2>
+            <form id="enrich-form" class="input-group">
+                <input type="url" id="company-url" placeholder="Enter company URL (e.g., https://example.com)" required>
+                <button type="submit" id="enrich-btn" class="btn primary-btn">
+                    <span class="btn-text">Enrich</span>
+                    <span class="loader hidden" id="enrich-loader"></span>
+                </button>
+            </form>
+            
+            <div id="status-message" class="status-message hidden"></div>
+            
+            <div id="single-result-container" class="hidden">
+                <!-- Single result card will be injected here -->
+            </div>
+        </section>
+
+        <section class="results-section">
+            <button id="show-results-btn" class="btn secondary-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                Show All Results
+            </button>
+            <span class="loader hidden inline-loader" id="results-loader"></span>
+            
+            <div id="all-results-container" class="grid-container hidden">
+                <!-- Cards will be injected here -->
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
