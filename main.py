@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 import uvicorn
 import os
 
@@ -12,6 +12,7 @@ app = FastAPI(title="AI & Automation Hackathon - Prospect Research")
 
 class EnrichRequest(BaseModel):
     url: str
+    manual_name: Optional[str] = None
 
 class CompanyProfile(BaseModel):
     website_name: str
@@ -39,6 +40,10 @@ async def enrich_company_endpoint(req: EnrichRequest):
         data = extract_company_info(scraped_text)
         if not data:
              raise HTTPException(status_code=500, detail="Failed to extract structured data from LLM.")
+             
+        # Optional override for manual record keeping
+        if req.manual_name:
+            data["website_name"] = req.manual_name
              
         # 3. Save & Return
         results_db.append(data)

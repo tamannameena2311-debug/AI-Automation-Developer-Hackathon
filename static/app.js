@@ -66,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     enrichForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const url = urlInput.value.trim();
+        const manualName = document.getElementById('manual-name').value.trim();
         if (!url) return;
 
         // UI Loading State
@@ -81,7 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ url })
+                body: JSON.stringify({ url, manual_name: manualName })
             });
 
             const data = await response.json();
