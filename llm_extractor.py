@@ -36,7 +36,7 @@ def extract_company_info(text: str, api_key: str = None) -> dict:
     """ + text
 
     response = client.models.generate_content(
-        model='gemini-2.5-flash',
+        model='gemini-1.5-pro',
         contents=prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
